@@ -57,7 +57,7 @@ func NewBaseSchema(table, alias string, id SchemaField, fks ForeignKeys, ctor Re
 }
 
 func (s *BaseSchema) Alias() string          { return s.alias }
-func (s *BaseSchema) Table() string          { return s.table }
+func (s *BaseSchema) Table() string          { return fmt.Sprintf(`"%s"`, s.table) }
 func (s *BaseSchema) ID() SchemaField        { return s.id }
 func (s *BaseSchema) Columns() []SchemaField { return s.columns }
 func (s *BaseSchema) ForeignKey(field string) (*ForeignKey, bool) {
@@ -113,9 +113,9 @@ func (f BaseSchemaField) String() string {
 func (f *BaseSchemaField) QualifiedName(schema Schema) string {
 	alias := schema.Alias()
 	if alias != "" {
-		return fmt.Sprintf("%s.%s", alias, f.name)
+		return fmt.Sprintf(`%s."%s"`, alias, f.name)
 	}
-	return f.name
+	return fmt.Sprintf(`"%s"`, f.name)
 }
 
 // ForeignKey contains the schema field of the foreign key and if it is an
